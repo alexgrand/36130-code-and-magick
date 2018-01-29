@@ -65,7 +65,7 @@ var getColHeight = function (times, checkedScore) {
   return (checkedScore === biggestScore) ? HISTM_HEIGHT : HISTM_HEIGHT * (checkedScore / biggestScore);
 };
 
-var getFloorNumber = function (arr) {
+var getFloorNumbers = function (arr) {
   var flooredArr = [];
   for (var i = 0; i < arr.length; i++) {
     flooredArr[i] = Math.floor(arr[i]);
@@ -87,7 +87,7 @@ var sortByArg = function (arr1, arr2, arg) {
 };
 
 window.renderStatistics = function (ctx, names, times) {
-  times = getFloorNumber(times);
+  times = getFloorNumbers(times);
 
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, CLOUD_SHADOW_COL);
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
