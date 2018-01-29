@@ -10,6 +10,7 @@ var FONT_FAMILY = 'PT Mono';
 var HISTM_HEIGHT = 150;
 var COL_WIDTH = 40;
 var COL_DIST = 50;
+var sortFilter = 'Вы';
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -34,8 +35,9 @@ var renderCol = function (ctx, x, colHeight, player, color) {
 
 var renderAllCols = function (ctx, names, times) {
   var totalPlayers = names.length;
+  sortByArg(names, times, sortFilter);
   for (var i = 0; i < totalPlayers; i++) {
-    var currentScore = Math.floor(times[i]);
+    var currentScore = times[i];
     var currentPlayer = names[i];
     var colColor = getColColor(currentPlayer);
     var colHeight = getColHeight(times, currentScore);
@@ -49,12 +51,7 @@ var getBiggestScore = function (scores) {
   for (var i = 0; i < scores.length; i++) {
     maxScore = (scores[i] > maxScore) ? scores[i] : maxScore;
   }
-  return Math.floor(maxScore);
-};
-
-var getColHeight = function (times, checkedScore) {
-  var biggestScore = getBiggestScore(times);
-  return (checkedScore === biggestScore) ? HISTM_HEIGHT : HISTM_HEIGHT * (checkedScore / biggestScore);
+  return maxScore;
 };
 
 var getColColor = function (curPlayer) {
@@ -63,7 +60,35 @@ var getColColor = function (curPlayer) {
   return (curPlayer === 'Вы') ? userColor : otherColor;
 };
 
+var getColHeight = function (times, checkedScore) {
+  var biggestScore = getBiggestScore(times);
+  return (checkedScore === biggestScore) ? HISTM_HEIGHT : HISTM_HEIGHT * (checkedScore / biggestScore);
+};
+
+var getFloorNumber = function (arr) {
+  var flooredArr = [];
+  for (var i = 0; i < arr.length; i++) {
+    flooredArr[i] = Math.floor(arr[i]);
+  }
+  return flooredArr;
+};
+
+var sortByArg = function (arr1, arr2, arg) {
+  for (var i = 0; i < arr1.length; i++) {
+    if (arr1[i] === arg || arr2[i] === arg) {
+      var arr1Swap = arr1[0];
+      var arr2Swap = arr2[0];
+      arr1[0] = arr1[i];
+      arr2[0] = arr2[i];
+      arr1[i] = arr1Swap;
+      arr2[i] = arr2Swap;
+    }
+  }
+};
+
 window.renderStatistics = function (ctx, names, times) {
+  times = getFloorNumber(times);
+
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, CLOUD_SHADOW_COL);
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
   renderText(ctx, CLOUD_X + 2 * GAP, CLOUD_Y + 3 * GAP, 'Ура вы победили!');
