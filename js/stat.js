@@ -3,14 +3,16 @@ var CLOUD_X = 100;
 var CLOUD_Y = 10;
 var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
-var CLOUD_SHADOW_COL = 'rgba(0, 0, 0, 0.7)';
+var CLOUD_COLOR = '#fff';
+var CLOUD_SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 var GAP = 10;
 var FONT_SIZE = 16;
 var FONT_FAMILY = 'PT Mono';
-var HISTM_HEIGHT = 150;
+var HISTOGRAM_HEIGHT = 150;
 var COL_WIDTH = 40;
 var COL_DIST = 50;
-var sortFilter = 'Вы';
+var SORTING_FILTER = 'Вы';
+var USER_COLOR = 'rgba(255, 0, 0, 1)';
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -35,7 +37,6 @@ var renderCol = function (ctx, x, colHeight, player, color) {
 
 var renderAllCols = function (ctx, names, times) {
   var totalPlayers = names.length;
-  sortByArg(names, times, sortFilter);
   for (var i = 0; i < totalPlayers; i++) {
     var currentScore = times[i];
     var currentPlayer = names[i];
@@ -55,17 +56,16 @@ var getBiggestScore = function (scores) {
 };
 
 var getColColor = function (curPlayer) {
-  var userColor = 'rgba(255, 0, 0, 1)';
   var otherColor = 'rgba(0, 0, 255, ' + Math.random() + ')';
-  return (curPlayer === 'Вы') ? userColor : otherColor;
+  return (curPlayer === 'Вы') ? USER_COLOR : otherColor;
 };
 
 var getColHeight = function (times, checkedScore) {
   var biggestScore = getBiggestScore(times);
-  return (checkedScore === biggestScore) ? HISTM_HEIGHT : HISTM_HEIGHT * (checkedScore / biggestScore);
+  return (checkedScore === biggestScore) ? HISTOGRAM_HEIGHT : HISTOGRAM_HEIGHT * (checkedScore / biggestScore);
 };
 
-var getFloorNumbers = function (arr) {
+var getFlooredNumbers = function (arr) {
   var flooredArr = [];
   for (var i = 0; i < arr.length; i++) {
     flooredArr[i] = Math.floor(arr[i]);
@@ -73,7 +73,7 @@ var getFloorNumbers = function (arr) {
   return flooredArr;
 };
 
-var sortByArg = function (arr1, arr2, arg) {
+var sortArrsByArg = function (arr1, arr2, arg) {
   for (var i = 0; i < arr1.length; i++) {
     if (arr1[i] === arg || arr2[i] === arg) {
       var arr1Swap = arr1[0];
@@ -87,10 +87,11 @@ var sortByArg = function (arr1, arr2, arg) {
 };
 
 window.renderStatistics = function (ctx, names, times) {
-  times = getFloorNumbers(times);
+  times = getFlooredNumbers(times);
+  sortArrsByArg(names, times, SORTING_FILTER);
 
-  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, CLOUD_SHADOW_COL);
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
+  renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, CLOUD_SHADOW_COLOR);
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_COLOR);
   renderText(ctx, CLOUD_X + 2 * GAP, CLOUD_Y + 3 * GAP, 'Ура вы победили!');
   renderText(ctx, CLOUD_X + 2 * GAP, CLOUD_Y + 3 * GAP + FONT_SIZE, 'Список результатов:');
 
