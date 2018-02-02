@@ -6,7 +6,7 @@ var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var NUMBER_OF_WIZARDS = 4;
 var wizards = [];
 
-var setupElement = document.querySelector('.hidden');
+var setupElement = document.querySelector('.setup');
 var similarWizardTemplateElement = document.querySelector('#similar-wizard-template').content;
 var setupSimilarElement = document.querySelector('.setup-similar');
 var setupSimilarListElement = setupSimilarElement.querySelector('.setup-similar-list');
