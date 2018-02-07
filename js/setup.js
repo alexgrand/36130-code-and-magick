@@ -10,6 +10,8 @@ var setupElement = document.querySelector('.setup');
 var similarWizardTemplateElement = document.querySelector('#similar-wizard-template').content;
 var setupSimilarElement = document.querySelector('.setup-similar');
 var setupSimilarListElement = setupSimilarElement.querySelector('.setup-similar-list');
+var setupOpenElement = document.querySelector('.setup-open');
+var setupCloseElement = setupElement.querySelector('.setup-close');
 
 var getRandomValue = function (array) {
   var randomValue = Math.floor(Math.random() * (array.length));
@@ -48,6 +50,15 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 }
 
 renderDomElements(wizards, setupSimilarListElement);
-setupElement.classList.remove('hidden');
-setupSimilarElement.classList.remove('hidden');
 
+var onOpenSetupElementClick = function () {
+  setupElement.classList.remove('hidden');
+  setupSimilarElement.classList.remove('hidden');
+};
+
+var onCloseSetupElementClick = function () {
+  setupElement.classList.add('hidden');
+};
+
+setupOpenElement.addEventListener('click', onOpenSetupElementClick);
+setupCloseElement.addEventListener('click', onCloseSetupElementClick);
