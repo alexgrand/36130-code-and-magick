@@ -4,6 +4,8 @@ var LASTNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вал�
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107),', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var NUMBER_OF_WIZARDS = 4;
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var wizards = [];
 
 var setupElement = document.querySelector('.setup');
@@ -11,7 +13,9 @@ var similarWizardTemplateElement = document.querySelector('#similar-wizard-templ
 var setupSimilarElement = document.querySelector('.setup-similar');
 var setupSimilarListElement = setupSimilarElement.querySelector('.setup-similar-list');
 var setupOpenElement = document.querySelector('.setup-open');
+var setupOpenIconElement = setupOpenElement.querySelector('.setup-open-icon');
 var setupCloseElement = setupElement.querySelector('.setup-close');
+var userNameElement = setupElement.querySelector('.setup-user-name');
 
 var getRandomValue = function (array) {
   var randomValue = Math.floor(Math.random() * (array.length));
@@ -51,14 +55,48 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 
 renderDomElements(wizards, setupSimilarListElement);
 
-var onOpenSetupElementClick = function () {
+var onCloseSetupElementEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeSetupElement();
+  }
+};
+
+var onUserNameElementFocusin = function () {
+  document.removeEventListener('keydown', onCloseSetupElementEscPress);
+  userNameElement.addEventListener('focusout', onUserNameElementFocusout);
+};
+
+var onUserNameElementFocusout = function () {
+  document.addEventListener('keydown', onCloseSetupElementEscPress);
+
+  userNameElement.removeEventListener('focusout', onUserNameElementFocusout);
+};
+
+var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
+
+  userNameElement.addEventListener('focusin', onUserNameElementFocusin);
+  document.addEventListener('keydown', onCloseSetupElementEscPress);
 };
 
-var onCloseSetupElementClick = function () {
+var closeSetupElement = function () {
   setupElement.classList.add('hidden');
+
+  userNameElement.removeEventListener('focusin', onUserNameElementFocusin);
+  document.removeEventListener('keydown', onCloseSetupElementEscPress);
 };
 
-setupOpenElement.addEventListener('click', onOpenSetupElementClick);
-setupCloseElement.addEventListener('click', onCloseSetupElementClick);
+setupOpenElement.addEventListener('click', openSetupElement);
+setupOpenIconElement.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openSetupElement();
+  }
+});
+
+setupCloseElement.addEventListener('click', closeSetupElement);
+setupCloseElement.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetupElement();
+  }
+});
