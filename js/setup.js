@@ -50,3 +50,4 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 renderDomElements(wizards, setupSimilarListElement);
 setupElement.classList.remove('hidden');
 setupSimilarElement.classList.remove('hidden');
+
