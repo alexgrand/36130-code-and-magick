@@ -16,6 +16,8 @@ var setupOpenElement = document.querySelector('.setup-open');
 var setupOpenIconElement = setupOpenElement.querySelector('.setup-open-icon');
 var setupCloseElement = setupElement.querySelector('.setup-close');
 var userNameElement = setupElement.querySelector('.setup-user-name');
+var setupFormElement = document.querySelector('.setup-wizard-form');
+var buttonSubmitElement = setupFormElement.querySelector('.setup-submit');
 
 var getRandomValue = function (array) {
   var randomValue = Math.floor(Math.random() * (array.length));
@@ -55,36 +57,36 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 
 renderDomElements(wizards, setupSimilarListElement);
 
-var onCloseSetupElementEscPress = function (evt) {
+var onCloseSetupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeSetupElement();
   }
 };
 
-var onUserNameElementFocusin = function () {
-  document.removeEventListener('keydown', onCloseSetupElementEscPress);
-  userNameElement.addEventListener('focusout', onUserNameElementFocusout);
+var onUserNameFocusin = function () {
+  document.removeEventListener('keydown', onCloseSetupEscPress);
+  userNameElement.addEventListener('focusout', onUserNameFocusout);
 };
 
-var onUserNameElementFocusout = function () {
-  document.addEventListener('keydown', onCloseSetupElementEscPress);
+var onUserNameFocusout = function () {
+  document.addEventListener('keydown', onCloseSetupEscPress);
 
-  userNameElement.removeEventListener('focusout', onUserNameElementFocusout);
+  userNameElement.removeEventListener('focusout', onUserNameFocusout);
 };
 
 var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
 
-  userNameElement.addEventListener('focusin', onUserNameElementFocusin);
-  document.addEventListener('keydown', onCloseSetupElementEscPress);
+  userNameElement.addEventListener('focusin', onUserNameFocusin);
+  document.addEventListener('keydown', onCloseSetupEscPress);
 };
 
 var closeSetupElement = function () {
   setupElement.classList.add('hidden');
 
-  userNameElement.removeEventListener('focusin', onUserNameElementFocusin);
-  document.removeEventListener('keydown', onCloseSetupElementEscPress);
+  userNameElement.removeEventListener('focusin', onUserNameFocusin);
+  document.removeEventListener('keydown', onCloseSetupEscPress);
 };
 
 setupOpenElement.addEventListener('click', openSetupElement);
