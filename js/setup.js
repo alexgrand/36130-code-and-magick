@@ -66,20 +66,10 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 renderDomElements(wizards, setupSimilarListElement);
 
 var onCloseSetupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  var activeUserNameElement = document.activeElement.classList.contains('setup-user-name');
+  if (evt.keyCode === ESC_KEYCODE && !activeUserNameElement) {
     closeSetupElement();
   }
-};
-
-var onUserNameFocusin = function () {
-  document.removeEventListener('keydown', onCloseSetupEscPress);
-  userNameElement.addEventListener('focusout', onUserNameFocusout);
-};
-
-var onUserNameFocusout = function () {
-  document.addEventListener('keydown', onCloseSetupEscPress);
-
-  userNameElement.removeEventListener('focusout', onUserNameFocusout);
 };
 
 var onUserNameInvalid = function (evt) {
@@ -108,7 +98,6 @@ var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
 
-  userNameElement.addEventListener('focusin', onUserNameFocusin);
   userNameElement.addEventListener('invalid', onUserNameInvalid);
   userNameElement.addEventListener('input', onUserNameInput);
   document.addEventListener('keydown', onCloseSetupEscPress);
@@ -117,7 +106,6 @@ var openSetupElement = function () {
 var closeSetupElement = function () {
   setupElement.classList.add('hidden');
 
-  userNameElement.removeEventListener('focusin', onUserNameFocusin);
   userNameElement.removeEventListener('invalid', onUserNameInvalid);
   userNameElement.removeEventListener('input', onUserNameInput);
   document.removeEventListener('keydown', onCloseSetupEscPress);
