@@ -122,25 +122,86 @@ var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
 
-  userNameElement.addEventListener('invalid', onUserNameInvalid);
-  userNameElement.addEventListener('input', onUserNameInput);
-  document.addEventListener('keydown', onCloseSetupEscPress);
+  runOpenCloseSetupHandlers(true);
 };
 
 var closeSetupElement = function () {
   setupElement.classList.add('hidden');
 
-  userNameElement.removeEventListener('invalid', onUserNameInvalid);
-  userNameElement.removeEventListener('input', onUserNameInput);
-  document.removeEventListener('keydown', onCloseSetupEscPress);
+  runOpenCloseSetupHandlers(false);
 };
 
-setupOpenElement.addEventListener('click', openSetupElement);
-setupOpenIconElement.addEventListener('keydown', onSetupOpenIconEnterPress);
+var addRemoveListeners = function (element, eventType, handler, add) {
+  if (add) {
+    element.addEventListener(eventType, handler);
+  } else {
+    element.removeEventListener(eventType, handler);
+  }
+};
 
-setupCloseElement.addEventListener('click', closeSetupElement);
-setupCloseElement.addEventListener('keydown', onSetupCloseEnterPress);
+var runBasichandlers = function () {
+  for (var j = 0; j < basicHandlers.length; j++) {
+    addRemoveListeners(basicHandlers[j].element, basicHandlers[j].eventType, basicHandlers[j].handler, basicHandlers[j].adding);
+  }
+};
 
-wizardCoatElement.addEventListener('click', changeWizardDetails);
-wizardEyesElement.addEventListener('click', changeWizardDetails);
-wizardFireballElement.addEventListener('click', changeWizardDetails);
+var runOpenCloseSetupHandlers = function (addinglistener) {
+  for (var k = 0; k < openCloseSetupHandlers.length; k++) {
+    addRemoveListeners(openCloseSetupHandlers[k].element, openCloseSetupHandlers[k].eventType, openCloseSetupHandlers[k].handler, addinglistener);
+  }
+};
+
+var basicHandlers = [
+  {element: setupOpenElement,
+    eventType: 'click',
+    handler: openSetupElement,
+    adding: true
+  },
+  {element: setupOpenIconElement,
+    eventType: 'keydown',
+    handler: onSetupOpenIconEnterPress,
+    adding: true
+  },
+  {element: setupCloseElement,
+    eventType: 'click',
+    handler: closeSetupElement,
+    adding: true
+  },
+  {element: setupCloseElement,
+    eventType: 'keydown',
+    handler: onSetupCloseEnterPress,
+    adding: true
+  },
+  {element: wizardCoatElement,
+    eventType: 'click',
+    handler: changeWizardDetails,
+    adding: true
+  },
+  {element: wizardEyesElement,
+    eventType: 'click',
+    handler: changeWizardDetails,
+    adding: true
+  },
+  {element: wizardFireballElement,
+    eventType: 'click',
+    handler: changeWizardDetails,
+    adding: true
+  },
+];
+
+var openCloseSetupHandlers = [
+  {element: userNameElement,
+    eventType: 'invalid',
+    handler: onUserNameInvalid
+  },
+  {element: userNameElement,
+    eventType: 'input',
+    handler: onUserNameInput
+  },
+  {element: document,
+    eventType: 'keydown',
+    handler: onCloseSetupEscPress
+  }
+];
+
+runBasichandlers();
