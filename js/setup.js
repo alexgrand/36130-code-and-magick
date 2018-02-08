@@ -40,6 +40,12 @@ var createWizard = function () {
   };
 };
 
+var createWizardsArray = function (wizardsArray) {
+  for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
+    wizardsArray[i] = createWizard();
+  }
+};
+
 var renderWizard = function (wizard) {
   var wizardElement = similarWizardTemplateElement.cloneNode(true);
 
@@ -59,27 +65,35 @@ var renderDomElements = function (allWizards, element) {
   element.appendChild(fragment);
 };
 
-for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
-  wizards[i] = createWizard();
-}
-
-renderDomElements(wizards, setupSimilarListElement);
+var changeWizardDetails = function (evt) {
+  var element = evt.target;
+  if (element.classList.contains('setup-fireball')) {
+    element = element.parentNode;
+    element.style.backgroundColor = getRandomValue(FIREBALL_COLORS);
+  } else if (element.classList.contains('wizard-coat')) {
+    element.style.fill = getRandomValue(COAT_COLORS);
+  } else if (element.classList.contains('wizard-eyes')) {
+    element.style.fill = getRandomValue(EYES_COLORS);
+  }
+};
 
 var onCloseSetupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  var activeUserNameElement = document.activeElement.classList.contains('setup-user-name');
+  if (evt.keyCode === ESC_KEYCODE && !activeUserNameElement) {
     closeSetupElement();
   }
 };
 
-var onUserNameFocusin = function () {
-  document.removeEventListener('keydown', onCloseSetupEscPress);
-  userNameElement.addEventListener('focusout', onUserNameFocusout);
+var onSetupCloseEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetupElement();
+  }
 };
 
-var onUserNameFocusout = function () {
-  document.addEventListener('keydown', onCloseSetupEscPress);
-
-  userNameElement.removeEventListener('focusout', onUserNameFocusout);
+var onSetupOpenIconEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openSetupElement();
+  }
 };
 
 var onUserNameInvalid = function (evt) {
@@ -108,41 +122,75 @@ var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
 
-  userNameElement.addEventListener('focusin', onUserNameFocusin);
-  userNameElement.addEventListener('invalid', onUserNameInvalid);
-  userNameElement.addEventListener('input', onUserNameInput);
-  document.addEventListener('keydown', onCloseSetupEscPress);
+  runHandlers(openCloseSetupHandlers, true);
 };
 
 var closeSetupElement = function () {
   setupElement.classList.add('hidden');
 
-  userNameElement.removeEventListener('focusin', onUserNameFocusin);
-  userNameElement.removeEventListener('invalid', onUserNameInvalid);
-  userNameElement.removeEventListener('input', onUserNameInput);
-  document.removeEventListener('keydown', onCloseSetupEscPress);
+  runHandlers(openCloseSetupHandlers, false);
 };
 
-setupOpenElement.addEventListener('click', openSetupElement);
-setupOpenIconElement.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    openSetupElement();
+var addRemoveListeners = function (element, eventType, handler, add) {
+  if (add) {
+    element.addEventListener(eventType, handler);
+  } else {
+    element.removeEventListener(eventType, handler);
   }
-});
+};
 
-setupCloseElement.addEventListener('click', closeSetupElement);
-setupCloseElement.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closeSetupElement();
+var runHandlers = function (listenersArray, addinglistener) {
+  for (var j = 0; j < listenersArray.length; j++) {
+    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, addinglistener);
   }
-});
+};
 
-wizardCoatElement.addEventListener('click', function () {
-  wizardCoatElement.style.fill = getRandomValue(COAT_COLORS);
-});
-wizardEyesElement.addEventListener('click', function () {
-  wizardEyesElement.style.fill = getRandomValue(EYES_COLORS);
-});
-wizardFireballElement.addEventListener('click', function () {
-  wizardFireballElement.style.backgroundColor = getRandomValue(FIREBALL_COLORS);
-});
+var basicHandlers = [
+  {element: setupOpenElement,
+    eventType: 'click',
+    handler: openSetupElement
+  },
+  {element: setupOpenIconElement,
+    eventType: 'keydown',
+    handler: onSetupOpenIconEnterPress
+  },
+  {element: setupCloseElement,
+    eventType: 'click',
+    handler: closeSetupElement
+  },
+  {element: setupCloseElement,
+    eventType: 'keydown',
+    handler: onSetupCloseEnterPress
+  },
+  {element: wizardCoatElement,
+    eventType: 'click',
+    handler: changeWizardDetails
+  },
+  {element: wizardEyesElement,
+    eventType: 'click',
+    handler: changeWizardDetails
+  },
+  {element: wizardFireballElement,
+    eventType: 'click',
+    handler: changeWizardDetails
+  },
+];
+
+var openCloseSetupHandlers = [
+  {element: userNameElement,
+    eventType: 'invalid',
+    handler: onUserNameInvalid
+  },
+  {element: userNameElement,
+    eventType: 'input',
+    handler: onUserNameInput
+  },
+  {element: document,
+    eventType: 'keydown',
+    handler: onCloseSetupEscPress
+  }
+];
+
+createWizardsArray(wizards);
+renderDomElements(wizards, setupSimilarListElement);
+runHandlers(basicHandlers, true);
