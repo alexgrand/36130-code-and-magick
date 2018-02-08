@@ -40,6 +40,12 @@ var createWizard = function () {
   };
 };
 
+var createWizardsArray = function (wizardsArray) {
+  for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
+    wizardsArray[i] = createWizard();
+  }
+};
+
 var renderWizard = function (wizard) {
   var wizardElement = similarWizardTemplateElement.cloneNode(true);
 
@@ -58,12 +64,6 @@ var renderDomElements = function (allWizards, element) {
   }
   element.appendChild(fragment);
 };
-
-for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
-  wizards[i] = createWizard();
-}
-
-renderDomElements(wizards, setupSimilarListElement);
 
 var changeWizardDetails = function (evt) {
   var element = evt.target;
@@ -122,13 +122,13 @@ var openSetupElement = function () {
   setupElement.classList.remove('hidden');
   setupSimilarElement.classList.remove('hidden');
 
-  runOpenCloseSetupHandlers(true);
+  runHandlers(openCloseSetupHandlers, true);
 };
 
 var closeSetupElement = function () {
   setupElement.classList.add('hidden');
 
-  runOpenCloseSetupHandlers(false);
+  runHandlers(openCloseSetupHandlers, false);
 };
 
 var addRemoveListeners = function (element, eventType, handler, add) {
@@ -139,53 +139,40 @@ var addRemoveListeners = function (element, eventType, handler, add) {
   }
 };
 
-var runBasichandlers = function () {
-  for (var j = 0; j < basicHandlers.length; j++) {
-    addRemoveListeners(basicHandlers[j].element, basicHandlers[j].eventType, basicHandlers[j].handler, basicHandlers[j].adding);
-  }
-};
-
-var runOpenCloseSetupHandlers = function (addinglistener) {
-  for (var k = 0; k < openCloseSetupHandlers.length; k++) {
-    addRemoveListeners(openCloseSetupHandlers[k].element, openCloseSetupHandlers[k].eventType, openCloseSetupHandlers[k].handler, addinglistener);
+var runHandlers = function (listenersArray, addinglistener) {
+  for (var j = 0; j < listenersArray.length; j++) {
+    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, addinglistener);
   }
 };
 
 var basicHandlers = [
   {element: setupOpenElement,
     eventType: 'click',
-    handler: openSetupElement,
-    adding: true
+    handler: openSetupElement
   },
   {element: setupOpenIconElement,
     eventType: 'keydown',
-    handler: onSetupOpenIconEnterPress,
-    adding: true
+    handler: onSetupOpenIconEnterPress
   },
   {element: setupCloseElement,
     eventType: 'click',
-    handler: closeSetupElement,
-    adding: true
+    handler: closeSetupElement
   },
   {element: setupCloseElement,
     eventType: 'keydown',
-    handler: onSetupCloseEnterPress,
-    adding: true
+    handler: onSetupCloseEnterPress
   },
   {element: wizardCoatElement,
     eventType: 'click',
-    handler: changeWizardDetails,
-    adding: true
+    handler: changeWizardDetails
   },
   {element: wizardEyesElement,
     eventType: 'click',
-    handler: changeWizardDetails,
-    adding: true
+    handler: changeWizardDetails
   },
   {element: wizardFireballElement,
     eventType: 'click',
-    handler: changeWizardDetails,
-    adding: true
+    handler: changeWizardDetails
   },
 ];
 
@@ -204,4 +191,6 @@ var openCloseSetupHandlers = [
   }
 ];
 
-runBasichandlers();
+createWizardsArray(wizards);
+renderDomElements(wizards, setupSimilarListElement);
+runHandlers(basicHandlers, true);
