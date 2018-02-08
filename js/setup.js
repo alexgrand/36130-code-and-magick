@@ -72,6 +72,18 @@ var onCloseSetupEscPress = function (evt) {
   }
 };
 
+var onSetupCloseEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetupElement();
+  }
+};
+
+var onSetupOpenIconEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openSetupElement();
+  }
+};
+
 var onUserNameInvalid = function (evt) {
   var nameInput = evt.target;
 
@@ -112,18 +124,10 @@ var closeSetupElement = function () {
 };
 
 setupOpenElement.addEventListener('click', openSetupElement);
-setupOpenIconElement.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    openSetupElement();
-  }
-});
+setupOpenIconElement.addEventListener('keydown', onSetupOpenIconEnterPress);
 
 setupCloseElement.addEventListener('click', closeSetupElement);
-setupCloseElement.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    closeSetupElement();
-  }
-});
+setupCloseElement.addEventListener('keydown', onSetupCloseEnterPress);
 
 wizardCoatElement.addEventListener('click', function () {
   wizardCoatElement.style.fill = getRandomValue(COAT_COLORS);
