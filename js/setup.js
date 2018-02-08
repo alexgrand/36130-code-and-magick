@@ -65,6 +65,18 @@ for (var i = 0; i < NUMBER_OF_WIZARDS; i++) {
 
 renderDomElements(wizards, setupSimilarListElement);
 
+var changeWizardDetails = function (evt) {
+  var element = evt.target;
+  if (element.classList.contains('setup-fireball')) {
+    element = element.parentNode;
+    element.style.backgroundColor = getRandomValue(FIREBALL_COLORS);
+  } else if (element.classList.contains('wizard-coat')) {
+    element.style.fill = getRandomValue(COAT_COLORS);
+  } else if (element.classList.contains('wizard-eyes')) {
+    element.style.fill = getRandomValue(EYES_COLORS);
+  }
+};
+
 var onCloseSetupEscPress = function (evt) {
   var activeUserNameElement = document.activeElement.classList.contains('setup-user-name');
   if (evt.keyCode === ESC_KEYCODE && !activeUserNameElement) {
@@ -129,12 +141,6 @@ setupOpenIconElement.addEventListener('keydown', onSetupOpenIconEnterPress);
 setupCloseElement.addEventListener('click', closeSetupElement);
 setupCloseElement.addEventListener('keydown', onSetupCloseEnterPress);
 
-wizardCoatElement.addEventListener('click', function () {
-  wizardCoatElement.style.fill = getRandomValue(COAT_COLORS);
-});
-wizardEyesElement.addEventListener('click', function () {
-  wizardEyesElement.style.fill = getRandomValue(EYES_COLORS);
-});
-wizardFireballElement.addEventListener('click', function () {
-  wizardFireballElement.style.backgroundColor = getRandomValue(FIREBALL_COLORS);
-});
+wizardCoatElement.addEventListener('click', changeWizardDetails);
+wizardEyesElement.addEventListener('click', changeWizardDetails);
+wizardFireballElement.addEventListener('click', changeWizardDetails);
